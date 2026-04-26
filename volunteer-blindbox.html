@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GiveBox — Volunteer Drops</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f5f0e8;
+  --warm-white: #fdfaf5;
+  --ink: #1a1612;
+  --ink-light: #4a4540;
+  --muted: #9a9088;
+  --accent: #e85d26;
+  --accent-light: #f4a07a;
+  --accent-pale: #fdeee6;
+  --green: #2d6a4f;
+  --green-pale: #e8f4ee;
+  --blue: #1a5276;
+  --blue-pale: #e8f0f8;
+  --gold: #c17f24;
+  --gold-pale: #fdf3e3;
+  --card-border: rgba(26,22,18,0.1);
+  --shadow: rgba(26,22,18,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: #0d1117;
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── PHONE SHELL ─── */
+.app {
+  max-width: 390px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #0d1117;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ════════════════════════════
+   SCREEN 1 — LANDING
+════════════════════════════ */
+#s-landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0d1117;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Starfield — matches screen 2 */
+#s-landing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 12%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(1px 1px at 72% 7%,  rgba(255,255,255,0.4)  0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 25%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 8%  40%, rgba(255,255,255,0.3)  0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 4%,  rgba(255,255,255,0.5)  0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 18%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 93% 50%, rgba(255,255,255,0.3)  0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient deep blue glow from mall sign area */
+#s-landing::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 300px; height: 220px;
+  background: radial-gradient(ellipse, rgba(78,130,240,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Top logo bar ── */
+.landing-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 52px 24px 0;
+  animation: fadeUp 0.5s ease both;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-box {
+  width: 34px; height: 34px;
+  background: #e85d26;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 20px rgba(232,93,38,0.4);
+}
+
+.logo-name {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+/* ── Mini mall SVG on landing ── */
+.landing-mall-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 32px 0;
+  position: relative;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.landing-mall-svg {
+  width: 100%;
+  max-width: 310px;
+  filter: drop-shadow(0 8px 40px rgba(78,130,240,0.18));
+}
+
+/* Floating blind box over the building */
+.landing-box-float {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -62%);
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, #1e3060, #0d1825);
+  border: 2px solid rgba(78,130,240,0.4);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  box-shadow:
+    0 0 0 6px rgba(78,130,240,0.08),
+    0 12px 40px rgba(0,0,0,0.5),
+    0 0 60px rgba(78,130,240,0.15);
+  animation: floatBox 3s ease-in-out infinite;
+  z-index: 5;
+}
+
+@keyframes floatBox {
+  0%,100% { transform: translate(-50%, -62%) translateY(0); }
+  50%      { transform: translate(-50%, -62%) translateY(-10px); }
+}
+
+/* Glowing question mark badge on the box */
+.landing-box-float::after {
+  content: '?';
+  position: absolute;
+  bottom: -8px; right: -8px;
+  width: 26px; height: 26px;
+  background: #e85d26;
+  border: 2px solid #0d1117;
+  border-radius: 50%;
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 22px;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(232,93,38,0.6);
+}
+
+/* ── Copy block ── */
+.landing-copy {
+  padding: 20px 28px 0;
+  text-align: center;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(78,130,240,0.12);
+  border: 1px solid rgba(78,130,240,0.25);
+  color: #7eb3f0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+
+.eyebrow-dot {
+  width: 5px; height: 5px;
+  background: #7eb3f0;
+  border-radius: 50%;
+  animation: eyebrowPulse 2s ease infinite;
+}
+
+@keyframes eyebrowPulse {
+  0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+
+.landing-headline {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.landing-headline em {
+  font-style: italic;
+  color: #f4a07a;
+}
+
+.landing-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.65;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* ── CTA area ── */
+.cta-section {
+  padding: 24px 20px 44px;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.cta-btn {
+  width: 100%;
+  background: #e85d26;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 20px 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 36px rgba(232,93,38,0.4), 0 2px 8px rgba(232,93,38,0.2);
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.cta-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: sweep 3s ease infinite;
+}
+
+@keyframes sweep {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+
+.cta-btn:active { transform: scale(0.97); }
+
+.cta-gift {
+  width: 46px; height: 46px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.cta-words { flex: 1; text-align: left; }
+
+.cta-main {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.cta-hint {
+  font-size: 11px;
+  font-weight: 300;
+  opacity: 0.7;
+  margin-top: 3px;
+}
+
+.cta-arrow {
+  font-size: 20px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.browse-link {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.28);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/* ════════════════════════════
+   SCREEN 2 — MALL BUILDING VIEW
+════════════════════════════ */
+#s-boxes {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #0d1117;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Night-sky starfield texture */
+#s-boxes::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 8%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 22%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 35%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 5%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 40%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 28%, rgba(255,255,255,0.2) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.boxes-header {
+  padding: 52px 20px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 10;
+}
+
+.back-btn {
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: #fff;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.back-btn:active { background: rgba(255,255,255,0.2); }
+
+.boxes-title-wrap { flex: 1; }
+.boxes-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.boxes-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 3px;
+}
+
+/* Mall building scene container */
+.mall-scene {
+  position: relative;
+  z-index: 5;
+  padding: 16px 16px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The SVG building itself */
+.mall-svg {
+  width: 100%;
+  max-width: 358px;
+}
+
+/* Floating event pins on the building */
+.floor-pin {
+  position: absolute;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  /* Anchor the TIP of the tail to the (left, top) coordinate */
+  transform: translateX(-50%) translateY(-100%);
+  z-index: 20;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  animation: pinDrop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.floor-pin:nth-child(1) { animation-delay: 0.1s; }
+.floor-pin:nth-child(2) { animation-delay: 0.18s; }
+.floor-pin:nth-child(3) { animation-delay: 0.26s; }
+.floor-pin:nth-child(4) { animation-delay: 0.34s; }
+.floor-pin:nth-child(5) { animation-delay: 0.42s; }
+.floor-pin:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes pinDrop {
+  from { opacity: 0; transform: translateX(-50%) translateY(calc(-100% - 16px)) scale(0.7); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(-100%) scale(1); }
+}
+
+.floor-pin:active { transform: translateX(-50%) translateY(-100%) scale(0.9); }
+
+.pin-bubble {
+  width: 54px; height: 54px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 0 3px rgba(255,255,255,0.15);
+  transition: box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.floor-pin:hover .pin-bubble {
+  box-shadow: 0 6px 28px rgba(0,0,0,0.5), 0 0 0 3px rgba(255,255,255,0.3);
+}
+
+.pin-icon {
+  transform: rotate(45deg);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.pin-tail {
+  width: 2px;
+  height: 10px;
+  background: rgba(255,255,255,0.4);
+  margin-top: -1px;
+}
+
+/* Pulse ring on pin */
+.pin-bubble::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  border: 2px solid currentColor;
+  opacity: 0;
+  animation: pinPulse 2.5s ease infinite;
+}
+
+.floor-pin:nth-child(odd)  .pin-bubble::after { animation-delay: 0s; }
+.floor-pin:nth-child(even) .pin-bubble::after { animation-delay: 1.25s; }
+
+@keyframes pinPulse {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Pin colour themes */
+.pin-green  .pin-bubble { background: #2d6a4f; color: #52b788; }
+.pin-red    .pin-bubble { background: #a93226; color: #e74c3c; }
+.pin-blue   .pin-bubble { background: #1a5276; color: #5dade2; }
+.pin-gold   .pin-bubble { background: #9a6516; color: #f0b429; }
+.pin-plum   .pin-bubble { background: #5b2c8a; color: #bb8fce; }
+.pin-teal   .pin-bubble { background: #0a5962; color: #48c9b0; }
+
+/* New dot badge */
+.pin-new {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 12px; height: 12px;
+  background: #ff4757;
+  border: 2px solid #0d1117;
+  border-radius: 50%;
+  z-index: 2;
+  animation: newBlink 1.5s ease infinite;
+}
+
+@keyframes newBlink {
+  0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+
+/* Floor label on pin */
+.pin-floor-label {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* Bottom strip */
+.mall-bottom-strip {
+  position: relative;
+  z-index: 10;
+  padding: 14px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mall-hint-bar {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mall-hint-icon { font-size: 18px; flex-shrink: 0; }
+.mall-hint-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.45;
+}
+.mall-hint-text strong { color: rgba(255,255,255,0.9); }
+
+/* Shuffle button */
+.shuffle-footer {
+  position: relative;
+  padding: 10px 16px 36px;
+  z-index: 10;
+}
+
+.shuffle-btn {
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 18px;
+  padding: 14px;
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: -0.01em;
+  transition: background 0.2s, color 0.2s;
+}
+.shuffle-btn:active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+
+/* ════════════════════════════
+   FULL-SCREEN EVENT MODAL
+════════════════════════════ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+.modal-overlay.open { display: block; }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  max-width: 390px;
+  margin: 0 auto;
+  background: #0d1117;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow: hidden;
+}
+
+.modal.open {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+/* ── Coloured hero strip ── */
+.modal-hero {
+  flex-shrink: 0;
+  padding: 52px 20px 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+}
+
+/* dot-grid texture on hero */
+.modal-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+}
+
+/* bottom fade into dark bg */
+.modal-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, #0d1117);
+  pointer-events: none;
+}
+
+.modal-close {
+  position: absolute;
+  top: 52px; right: 18px;
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.modal-close:active { background: rgba(255,255,255,0.3); }
+
+.modal-icon-ring {
+  width: 60px; height: 60px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  animation: iconBounce 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes iconBounce {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.modal-title-area {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.modal-category {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 4px;
+}
+
+.modal-name {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+/* ── Mystery nudge ── */
+.modal-mystery-strip {
+  flex-shrink: 0;
+  margin: 0 16px 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeUp 0.4s 0.15s ease both;
+}
+.mystery-strip-icon { font-size: 18px; flex-shrink: 0; }
+.mystery-strip-text { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.45; }
+.mystery-strip-text strong { color: rgba(255,255,255,0.85); }
+
+/* ── Clues section ── */
+.hints-section-title {
+  flex-shrink: 0;
+  padding: 14px 16px 8px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  animation: fadeUp 0.4s 0.2s ease both;
+}
+
+.hints-grid {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px;
+  animation: fadeUp 0.4s 0.25s ease both;
+}
+
+.hint-chip {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.hint-emoji { font-size: 18px; flex-shrink: 0; }
+.hint-info { flex: 1; min-width: 0; }
+.hint-label {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 2px;
+}
+.hint-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hint-chip.highlight {
+  background: rgba(232,93,38,0.12);
+  border-color: rgba(232,93,38,0.3);
+}
+.hint-chip.highlight .hint-label { color: rgba(232,93,38,0.8); }
+.hint-chip.highlight .hint-value { color: #f4a07a; }
+
+.yn-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-top: 1px;
+}
+.yn-yes { background: rgba(45,106,79,0.25); color: #6fcf97; }
+.yn-no  { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35); }
+
+/* ── Social proof inline row ── */
+.social-proof {
+  flex-shrink: 0;
+  margin: 10px 16px 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  animation: fadeUp 0.4s 0.3s ease both;
+}
+
+.proof-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  padding-right: 14px;
+}
+
+.proof-num {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #f4a07a;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.proof-lbl {
+  font-size: 9px;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.proof-testimonial { flex: 1; min-width: 0; }
+
+.proof-quote {
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.proof-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.03em;
+}
+
+/* ── Spacer pushes CTA to bottom ── */
+.modal-spacer { flex: 1; }
+
+/* ── Bottom CTA ── */
+.modal-cta-area {
+  flex-shrink: 0;
+  padding: 12px 16px 44px;
+  display: flex;
+  gap: 10px;
+  animation: fadeUp 0.4s 0.35s ease both;
+}
+
+.btn-reveal {
+  flex: 1;
+  background: #e85d26;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 16px 18px;
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 28px rgba(232,93,38,0.35);
+  transition: transform 0.18s;
+  letter-spacing: -0.01em;
+}
+.btn-reveal:active { transform: scale(0.96); }
+
+.btn-skip {
+  flex: 0;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  font-size: 20px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.7);
+  transition: background 0.2s;
+}
+.btn-skip:active { background: rgba(255,255,255,0.12); }
+
+/* ════════════════════════════
+   CONFETTI CANVAS
+════════════════════════════ */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* ════════════════════════════
+   SCREEN 4 — SIGNUP CONFIRM
+════════════════════════════ */
+.confirm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,22,18,0.5);
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+.confirm-overlay.open { display: flex; }
+
+.confirm-card {
+  background: var(--warm-white);
+  border-radius: 28px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes popIn {
+  from { opacity:0; transform: scale(0.85); }
+  to   { opacity:1; transform: scale(1); }
+}
+
+.confirm-emoji { font-size: 56px; margin-bottom: 16px; }
+.confirm-title {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.confirm-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.confirm-sub strong { color: var(--ink); font-weight: 600; }
+
+.confirm-ok {
+  width: 100%;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: background 0.2s;
+}
+.confirm-ok:active { background: var(--accent); }
+
+
+/* ── UTILITIES ── */
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* Confirm unit reveal */
+.confirm-unit-box {
+  background: var(--cream);
+  border: 1.5px dashed rgba(26,22,18,0.2);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.confirm-unit-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.confirm-unit-value {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.confirm-unit-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════ SCREEN 1: LANDING ══════════ -->
+<div id="s-landing">
+  <div class="landing-inner">
+
+    <!-- Logo -->
+    <div class="landing-topbar">
+      <div class="logo-mark">
+        <div class="logo-box">🎁</div>
+        <span class="logo-name">GiveBox</span>
+      </div>
+    </div>
+
+    <!-- Mini mall with floating box -->
+    <div class="landing-mall-wrap">
+      <!-- Floating blind box -->
+      <div class="landing-box-float">🎁</div>
+
+      <!-- Compact mall SVG -->
+      <svg class="landing-mall-svg" viewBox="0 0 310 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lBuildGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1e2d45"/>
+            <stop offset="100%" stop-color="#131e30"/>
+          </linearGradient>
+          <linearGradient id="lRoofGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#253558"/>
+            <stop offset="100%" stop-color="#1e2d45"/>
+          </linearGradient>
+          <filter id="lGlow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Building body -->
+        <rect x="14" y="24" width="282" height="192" rx="5" fill="url(#lBuildGrad)" stroke="#2a3f5f" stroke-width="1.5"/>
+        <!-- Roof -->
+        <rect x="8" y="14" width="294" height="16" rx="4" fill="url(#lRoofGrad)" stroke="#2a3f5f" stroke-width="1.5"/>
+        <!-- Mall sign -->
+        <rect x="88" y="17" width="134" height="10" rx="2.5" fill="#1e3060" stroke="#4a6fa5" stroke-width="0.8"/>
+        <text x="155" y="24.5" text-anchor="middle" font-family="Fraunces, serif" font-size="5.5" font-weight="900" fill="#7eb3f0" letter-spacing="1.5">GIVEBOX MALL</text>
+
+        <!-- Floor lines (3 floors + basement) -->
+        <line x1="14" y1="168" x2="296" y2="168" stroke="#2a3f5f" stroke-width="1.2"/>
+        <line x1="14" y1="120" x2="296" y2="120" stroke="#2a3f5f" stroke-width="1.2"/>
+        <line x1="14" y1="72"  x2="296" y2="72"  stroke="#2a3f5f" stroke-width="1.2"/>
+
+        <!-- Floor labels -->
+        <text x="21" y="54"  font-family="Outfit,sans-serif" font-size="6.5" fill="rgba(255,255,255,0.2)" letter-spacing="0.8" font-weight="600">L3</text>
+        <text x="21" y="102" font-family="Outfit,sans-serif" font-size="6.5" fill="rgba(255,255,255,0.2)" letter-spacing="0.8" font-weight="600">L2</text>
+        <text x="21" y="150" font-family="Outfit,sans-serif" font-size="6.5" fill="rgba(255,255,255,0.2)" letter-spacing="0.8" font-weight="600">L1</text>
+        <text x="21" y="196" font-family="Outfit,sans-serif" font-size="6.5" fill="rgba(255,255,255,0.15)" letter-spacing="0.8" font-weight="600">B1</text>
+
+        <!-- Atrium void -->
+        <rect x="124" y="24" width="62" height="190" fill="rgba(8,14,26,0.45)" stroke="#1e2d45" stroke-width="0.8"/>
+        <!-- Atrium light shaft -->
+        <rect x="130" y="24" width="50" height="190" fill="url(#lAtrGrad)" opacity="0.15"/>
+        <defs>
+          <linearGradient id="lAtrGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7eb3f0"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+        </defs>
+        <!-- Escalator lines -->
+        <line x1="130" y1="100" x2="178" y2="120" stroke="#4a6fa5" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+        <line x1="130" y1="148" x2="178" y2="168" stroke="#4a6fa5" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+
+        <!-- Shop windows left wing -->
+        <rect x="26"  y="36" width="20" height="14" rx="2" fill="#1e3566" opacity="0.85"/>
+        <rect x="52"  y="36" width="20" height="14" rx="2" fill="#1a4530" opacity="0.75"/>
+        <rect x="78"  y="36" width="20" height="14" rx="2" fill="#1e3566" opacity="0.65"/>
+        <rect x="26"  y="84" width="20" height="14" rx="2" fill="#1a4530" opacity="0.75"/>
+        <rect x="52"  y="84" width="20" height="14" rx="2" fill="#1e3566" opacity="0.85"/>
+        <rect x="78"  y="84" width="20" height="14" rx="2" fill="#1e3566" opacity="0.6"/>
+        <rect x="26"  y="132" width="20" height="14" rx="2" fill="#1e3566" opacity="0.75"/>
+        <rect x="52"  y="132" width="20" height="14" rx="2" fill="#1a4530" opacity="0.8"/>
+        <rect x="78"  y="132" width="20" height="14" rx="2" fill="#1e3566" opacity="0.6"/>
+        <rect x="26"  y="178" width="20" height="14" rx="2" fill="#1e3566" opacity="0.4"/>
+        <rect x="52"  y="178" width="20" height="14" rx="2" fill="#1a4530" opacity="0.4"/>
+
+        <!-- Shop windows right wing -->
+        <rect x="196" y="36" width="20" height="14" rx="2" fill="#1e3566" opacity="0.7"/>
+        <rect x="222" y="36" width="20" height="14" rx="2" fill="#1a4530" opacity="0.85"/>
+        <rect x="248" y="36" width="20" height="14" rx="2" fill="#1e3566" opacity="0.65"/>
+        <rect x="196" y="84" width="20" height="14" rx="2" fill="#1e3566" opacity="0.85"/>
+        <rect x="222" y="84" width="20" height="14" rx="2" fill="#1e3566" opacity="0.6"/>
+        <rect x="248" y="84" width="20" height="14" rx="2" fill="#1a4530" opacity="0.75"/>
+        <rect x="196" y="132" width="20" height="14" rx="2" fill="#1a4530" opacity="0.8"/>
+        <rect x="222" y="132" width="20" height="14" rx="2" fill="#1e3566" opacity="0.7"/>
+        <rect x="248" y="132" width="20" height="14" rx="2" fill="#1e3566" opacity="0.6"/>
+        <rect x="196" y="178" width="20" height="14" rx="2" fill="#1e3566" opacity="0.4"/>
+        <rect x="222" y="178" width="20" height="14" rx="2" fill="#1a4530" opacity="0.4"/>
+
+        <!-- Ambient glow on a couple windows -->
+        <circle cx="36"  cy="43"  r="3" fill="#5dade2" opacity="0.5" filter="url(#lGlow)"/>
+        <circle cx="258" cy="91"  r="3" fill="#52b788" opacity="0.5" filter="url(#lGlow)"/>
+        <circle cx="88"  cy="139" r="3" fill="#f0b429" opacity="0.45" filter="url(#lGlow)"/>
+
+        <!-- Entrance -->
+        <rect x="120" y="198" width="26" height="18" rx="2" fill="#08101e" stroke="#4a6fa5" stroke-width="0.8"/>
+        <rect x="154" y="198" width="26" height="18" rx="2" fill="#08101e" stroke="#4a6fa5" stroke-width="0.8"/>
+        <rect x="14"  y="214" width="282" height="3" rx="1.5" fill="#2a3f5f" opacity="0.7"/>
+
+        <!-- Mystery pins scattered on building (static, decorative) -->
+        <!-- Pin on L3 left -->
+        <circle cx="65" cy="60" r="7" fill="#2d6a4f" opacity="0.85" filter="url(#lGlow)"/>
+        <text x="65" y="63.5" text-anchor="middle" font-size="8">🌿</text>
+        <!-- Pin on L2 right -->
+        <circle cx="230" cy="108" r="7" fill="#1a5276" opacity="0.85" filter="url(#lGlow)"/>
+        <text x="230" y="111.5" text-anchor="middle" font-size="8">📚</text>
+        <!-- Pin on L1 left -->
+        <circle cx="55" cy="156" r="7" fill="#a93226" opacity="0.85" filter="url(#lGlow)"/>
+        <text x="55" y="159.5" text-anchor="middle" font-size="8">🍱</text>
+        <!-- Pin on B1 right -->
+        <circle cx="240" cy="192" r="7" fill="#5b2c8a" opacity="0.85" filter="url(#lGlow)"/>
+        <text x="240" y="195.5" text-anchor="middle" font-size="8">🎨</text>
+      </svg>
+    </div>
+
+    <!-- Copy -->
+    <div class="landing-copy">
+      <div class="landing-eyebrow">
+        <span class="eyebrow-dot"></span>
+        Happening in this mall · Today only
+      </div>
+      <h1 class="landing-headline">Volunteer.<br><em>Blind box</em> style.</h1>
+      <p class="landing-sub">Secret opportunities hidden across every floor. Pick a mystery drop and embrace the surprise.</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <button class="cta-btn" onclick="showBoxes()">
+        <div class="cta-gift">🎁</div>
+        <div class="cta-words">
+          <div class="cta-main">Show me mystery opportunities near me</div>
+          <div class="cta-hint">Tap a pin · peek at clues · just show up</div>
+        </div>
+        <div class="cta-arrow">→</div>
+      </button>
+      <p class="browse-link">Browse all on SG Cares →</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════ SCREEN 2: MALL BUILDING ══════════ -->
+<div id="s-boxes">
+  <div class="boxes-header">
+    <div class="back-btn" onclick="showLanding()">←</div>
+    <div class="boxes-title-wrap">
+      <div class="boxes-title">Mystery drops 🎁</div>
+      <div class="boxes-sub">Tap a glowing pin to peek inside</div>
+    </div>
+  </div>
+
+  <div class="mall-scene" id="mall-scene">
+
+    <!-- 2D Mall Cross-Section SVG -->
+    <svg class="mall-svg" viewBox="0 0 358 460" fill="none" xmlns="http://www.w3.org/2000/svg" id="mall-svg">
+      <!-- SKY GLOW -->
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a2744"/>
+          <stop offset="100%" stop-color="#0d1117"/>
+        </linearGradient>
+        <linearGradient id="buildingGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e2d45"/>
+          <stop offset="100%" stop-color="#162036"/>
+        </linearGradient>
+        <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#253558"/>
+          <stop offset="100%" stop-color="#1e2d45"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="softglow">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Building body -->
+      <rect x="18" y="40" width="322" height="390" rx="6" fill="url(#buildingGrad)" stroke="#2a3f5f" stroke-width="1.5"/>
+
+      <!-- Roof / fascia -->
+      <rect x="10" y="28" width="338" height="20" rx="4" fill="url(#roofGrad)" stroke="#2a3f5f" stroke-width="1.5"/>
+      <!-- Mall sign -->
+      <rect x="100" y="32" width="158" height="12" rx="3" fill="#1e3060" stroke="#4a6fa5" stroke-width="1"/>
+      <text x="179" y="41.5" text-anchor="middle" font-family="Fraunces, serif" font-size="7" font-weight="900" fill="#7eb3f0" letter-spacing="2">GIVEBOX MALL</text>
+
+      <!-- Floor dividers (5 floors: B1, L1–L4) -->
+      <!-- Divider between B1 and L1 -->
+      <line x1="18" y1="355" x2="340" y2="355" stroke="#2a3f5f" stroke-width="1.5"/>
+      <!-- Divider between L1 and L2 -->
+      <line x1="18" y1="280" x2="340" y2="280" stroke="#2a3f5f" stroke-width="1.5"/>
+      <!-- Divider between L2 and L3 -->
+      <line x1="18" y1="205" x2="340" y2="205" stroke="#2a3f5f" stroke-width="1.5"/>
+      <!-- Divider between L3 and L4 -->
+      <line x1="18" y1="130" x2="340" y2="130" stroke="#2a3f5f" stroke-width="1.5"/>
+
+      <!-- Floor labels -->
+      <text x="27" y="100" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="rgba(255,255,255,0.25)" letter-spacing="1">LEVEL 4</text>
+      <text x="27" y="175" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="rgba(255,255,255,0.25)" letter-spacing="1">LEVEL 3</text>
+      <text x="27" y="250" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="rgba(255,255,255,0.25)" letter-spacing="1">LEVEL 2</text>
+      <text x="27" y="325" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="rgba(255,255,255,0.25)" letter-spacing="1">LEVEL 1</text>
+      <text x="27" y="400" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="rgba(255,255,255,0.2)" letter-spacing="1">BASEMENT</text>
+
+      <!-- Atrium / central void -->
+      <rect x="140" y="42" width="78" height="386" rx="0" fill="rgba(10,18,35,0.4)" stroke="#1e2d45" stroke-width="1"/>
+      <!-- Atrium light shaft -->
+      <rect x="148" y="42" width="62" height="388" fill="url(#atriumGrad)" opacity="0.18"/>
+      <defs>
+        <linearGradient id="atriumGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7eb3f0"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Atrium railings per floor -->
+      <line x1="140" y1="280" x2="218" y2="280" stroke="#4a6fa5" stroke-width="1" opacity="0.6"/>
+      <line x1="140" y1="205" x2="218" y2="205" stroke="#4a6fa5" stroke-width="1" opacity="0.6"/>
+      <line x1="140" y1="130" x2="218" y2="130" stroke="#4a6fa5" stroke-width="1" opacity="0.6"/>
+      <!-- Railing posts -->
+      <line x1="140" y1="130" x2="140" y2="280" stroke="#3a5a8a" stroke-width="1" opacity="0.5" stroke-dasharray="3,4"/>
+      <line x1="218" y1="130" x2="218" y2="280" stroke="#3a5a8a" stroke-width="1" opacity="0.5" stroke-dasharray="3,4"/>
+
+      <!-- Escalator hints in atrium -->
+      <line x1="148" y1="180" x2="210" y2="210" stroke="#4a6fa5" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+      <line x1="148" y1="255" x2="210" y2="285" stroke="#4a6fa5" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+      <line x1="148" y1="330" x2="210" y2="360" stroke="#4a6fa5" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+
+      <!-- Lit shop windows — left side, per floor -->
+      <!-- L4 windows -->
+      <rect x="30" y="58" width="26" height="18" rx="2" fill="#1e3566" opacity="0.8"/>
+      <rect x="64" y="58" width="26" height="18" rx="2" fill="#1a4530" opacity="0.7"/>
+      <rect x="98" y="58" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <!-- L3 windows -->
+      <rect x="30" y="133" width="26" height="18" rx="2" fill="#1a4530" opacity="0.7"/>
+      <rect x="64" y="133" width="26" height="18" rx="2" fill="#1e3566" opacity="0.8"/>
+      <rect x="98" y="133" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <!-- L2 windows -->
+      <rect x="30" y="208" width="26" height="18" rx="2" fill="#1e3566" opacity="0.7"/>
+      <rect x="64" y="208" width="26" height="18" rx="2" fill="#1a4530" opacity="0.6"/>
+      <rect x="98" y="208" width="26" height="18" rx="2" fill="#1e3566" opacity="0.8"/>
+      <!-- L1 windows -->
+      <rect x="30" y="283" width="26" height="18" rx="2" fill="#1a4530" opacity="0.8"/>
+      <rect x="64" y="283" width="26" height="18" rx="2" fill="#1e3566" opacity="0.7"/>
+      <rect x="98" y="283" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <!-- B1 -->
+      <rect x="30" y="360" width="26" height="18" rx="2" fill="#1e3566" opacity="0.5"/>
+      <rect x="64" y="360" width="26" height="18" rx="2" fill="#1a4530" opacity="0.5"/>
+
+      <!-- Lit shop windows — right side, per floor -->
+      <!-- L4 -->
+      <rect x="232" y="58" width="26" height="18" rx="2" fill="#1e3566" opacity="0.7"/>
+      <rect x="266" y="58" width="26" height="18" rx="2" fill="#1a4530" opacity="0.8"/>
+      <rect x="300" y="58" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <!-- L3 -->
+      <rect x="232" y="133" width="26" height="18" rx="2" fill="#1e3566" opacity="0.8"/>
+      <rect x="266" y="133" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <rect x="300" y="133" width="26" height="18" rx="2" fill="#1a4530" opacity="0.7"/>
+      <!-- L2 -->
+      <rect x="232" y="208" width="26" height="18" rx="2" fill="#1a4530" opacity="0.8"/>
+      <rect x="266" y="208" width="26" height="18" rx="2" fill="#1e3566" opacity="0.7"/>
+      <rect x="300" y="208" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <!-- L1 -->
+      <rect x="232" y="283" width="26" height="18" rx="2" fill="#1e3566" opacity="0.6"/>
+      <rect x="266" y="283" width="26" height="18" rx="2" fill="#1a4530" opacity="0.8"/>
+      <rect x="300" y="283" width="26" height="18" rx="2" fill="#1e3566" opacity="0.7"/>
+      <!-- B1 -->
+      <rect x="232" y="360" width="26" height="18" rx="2" fill="#1e3566" opacity="0.5"/>
+      <rect x="266" y="360" width="26" height="18" rx="2" fill="#1a4530" opacity="0.5"/>
+
+      <!-- Ground / entrance -->
+      <rect x="18" y="428" width="322" height="4" rx="2" fill="#2a3f5f" opacity="0.8"/>
+      <!-- Entrance doors -->
+      <rect x="145" y="400" width="30" height="28" rx="2" fill="#0d1825" stroke="#4a6fa5" stroke-width="1"/>
+      <rect x="183" y="400" width="30" height="28" rx="2" fill="#0d1825" stroke="#4a6fa5" stroke-width="1"/>
+      <line x1="160" y1="400" x2="160" y2="428" stroke="#4a6fa5" stroke-width="0.5" opacity="0.5"/>
+      <line x1="198" y1="400" x2="198" y2="428" stroke="#4a6fa5" stroke-width="0.5" opacity="0.5"/>
+
+      <!-- Ambient glow dots on a few windows to suggest life -->
+      <circle cx="43" cy="67" r="3" fill="#5dade2" opacity="0.4" filter="url(#glow)"/>
+      <circle cx="277" cy="142" r="3" fill="#52b788" opacity="0.4" filter="url(#glow)"/>
+      <circle cx="111" cy="217" r="3" fill="#f0b429" opacity="0.4" filter="url(#glow)"/>
+      <circle cx="245" cy="292" r="3" fill="#bb8fce" opacity="0.4" filter="url(#glow)"/>
+    </svg>
+
+    <!-- Event pins are injected here by JS, positioned absolutely over the SVG -->
+    <div id="pins-container" style="position:absolute; top:0; left:0; right:0; bottom:0; pointer-events:none;"></div>
+
+  </div>
+
+  <div class="mall-bottom-strip">
+    <div class="mall-hint-bar">
+      <span class="mall-hint-icon">🔮</span>
+      <p class="mall-hint-text">All events are <strong>inside this mall, today</strong>. Tap a glowing pin to peek at clues — each one is a mystery until you show up.</p>
+    </div>
+  </div>
+
+  <div class="shuffle-footer">
+    <button class="shuffle-btn" onclick="shuffleBoxes()">
+      <span>🔀</span> Shuffle mystery drops
+    </button>
+  </div>
+</div>
+
+
+<!-- ══════════ CONFETTI CANVAS ══════════ -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ══════════ PEEK MODAL (full screen) ══════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+
+    <!-- Hero strip with coloured bg -->
+    <div class="modal-hero" id="modal-hero">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-icon-ring" id="m-icon">🌿</div>
+      <div class="modal-title-area">
+        <div class="modal-category" id="m-category"></div>
+        <div class="modal-name" id="m-name"></div>
+      </div>
+    </div>
+
+    <!-- Mystery nudge -->
+    <div class="modal-mystery-strip">
+      <span class="mystery-strip-icon">🕵️</span>
+      <p class="mystery-strip-text">We're keeping things mysterious. <strong>Here are your clues</strong> — see if this sounds like your kind of good deed.</p>
+    </div>
+
+    <!-- Clues -->
+    <div class="hints-section-title">Your Clues</div>
+    <div class="hints-grid" id="hints-grid"></div>
+
+    <!-- Social proof -->
+    <div class="social-proof" id="social-proof"></div>
+
+    <!-- Spacer -->
+    <div class="modal-spacer"></div>
+
+    <!-- CTA -->
+    <div class="modal-cta-area">
+      <button class="btn-skip" onclick="closeModal()" title="Skip">👋</button>
+      <button class="btn-reveal" onclick="signUp()">✅ I'm in — sign me up!</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════ CONFIRM MODAL ══════════ -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-card">
+    <div class="confirm-emoji">🎉</div>
+    <div class="confirm-title">You're in!</div>
+    <p class="confirm-sub">Here's where to go — head there now, it's happening <strong id="confirm-time"></strong> today.</p>
+    <div class="confirm-unit-box">
+      <div class="confirm-unit-label">📍 Your spot in this mall</div>
+      <div class="confirm-unit-value" id="confirm-unit"></div>
+      <div class="confirm-unit-sub" id="confirm-cat"></div>
+    </div>
+    <button class="confirm-ok" onclick="closeConfirm()">Back to drops</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ─── DATA ───
+// ─── TODAY'S DATE ───
+function getTodayLabel() {
+  return new Date().toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+// ─── DATA ───
+const events = [
+  {
+    id: 1, theme: 'mc-green', heroColor: '#2d6a4f',
+    icon: '🌿', category: 'Environment',
+    nameHidden: 'A Green Mystery',
+    unit: 'Level 3, #03-12',
+    hints: [
+      { emoji: '⏱️', label: 'Duration', value: '2 hours', highlight: true },
+      { emoji: '📅', label: 'When', value: 'Today, 10:00am' },
+      { emoji: '💪', label: 'Effort', value: 'Light — hands-on' },
+      { emoji: '👶', label: 'Child friendly', yn: true },
+      { emoji: '🐾', label: 'Animals', yn: false },
+      { emoji: '👴', label: 'Elderly welcome', yn: true },
+      { emoji: '🧑‍🤝‍🧑', label: 'Spots left', value: '6 of 15' },
+    ],
+    participants: 312,
+    testimonial: { quote: 'Such a meaningful way to spend a Saturday morning. I did not expect to learn so much!', name: 'Rachel T.' },
+    confettiColors: ['#2d6a4f','#52b788','#b7e4c7','#fff','#d8f3dc'],
+    isNew: true
+  },
+  {
+    id: 2, theme: 'mc-orange', heroColor: '#c0392b',
+    icon: '🍱', category: 'Food & Hunger',
+    nameHidden: 'A Warm Meal Mission',
+    unit: 'Level 1, #01-04',
+    hints: [
+      { emoji: '⏱️', label: 'Duration', value: '2.5 hours', highlight: true },
+      { emoji: '📅', label: 'When', value: 'Today, 11:00am' },
+      { emoji: '💪', label: 'Effort', value: 'Moderate — standing' },
+      { emoji: '👶', label: 'Child friendly', yn: false },
+      { emoji: '🐾', label: 'Animals', yn: false },
+      { emoji: '👴', label: 'Elderly welcome', yn: true },
+      { emoji: '🧑‍🤝‍🧑', label: 'Spots left', value: '3 of 8' },
+    ],
+    participants: 548,
+    testimonial: { quote: 'Completely changed how I think about the people around me. Highly recommend for anyone who wants to give back.', name: 'Wei Liang' },
+    confettiColors: ['#c0392b','#e74c3c','#f9ebea','#fff','#ffd166'],
+    isNew: false
+  },
+  {
+    id: 3, theme: 'mc-blue', heroColor: '#1a5276',
+    icon: '📚', category: 'Education',
+    nameHidden: 'A Learning Spark',
+    unit: 'Level 4, #04-21',
+    hints: [
+      { emoji: '⏱️', label: 'Duration', value: '2 hours', highlight: true },
+      { emoji: '📅', label: 'When', value: 'Today, 2:00pm' },
+      { emoji: '💪', label: 'Effort', value: 'Light — seated' },
+      { emoji: '👶', label: 'Child friendly', yn: true },
+      { emoji: '🐾', label: 'Animals', yn: false },
+      { emoji: '👴', label: 'Elderly welcome', yn: false },
+      { emoji: '🧑‍🤝‍🧑', label: 'Spots left', value: '8 of 12' },
+    ],
+    participants: 190,
+    testimonial: { quote: 'The kids were so curious and full of energy. I left feeling more inspired than I had in years.', name: 'Priya M.' },
+    confettiColors: ['#1a5276','#2e86c1','#a9cce3','#fff','#d6eaf8'],
+    isNew: true
+  },
+  {
+    id: 4, theme: 'mc-gold', heroColor: '#b7770d',
+    icon: '🐾', category: 'Animal Welfare',
+    nameHidden: 'A Furry Friend Mission',
+    unit: 'Level 2, #02-07',
+    hints: [
+      { emoji: '⏱️', label: 'Duration', value: '2 hours', highlight: true },
+      { emoji: '📅', label: 'When', value: 'Today, 9:30am' },
+      { emoji: '💪', label: 'Effort', value: 'Light — gentle tasks' },
+      { emoji: '👶', label: 'Child friendly', yn: true },
+      { emoji: '🐾', label: 'Animals', yn: true },
+      { emoji: '👴', label: 'Elderly welcome', yn: false },
+      { emoji: '🧑‍🤝‍🧑', label: 'Spots left', value: '4 of 10' },
+    ],
+    participants: 427,
+    testimonial: { quote: 'Never thought I would meet my best friends at a volunteer event. We still hang out today!', name: 'Jasmine K.' },
+    confettiColors: ['#b7770d','#f0b429','#fdf3e3','#fff','#ffeaa7'],
+    isNew: false
+  },
+  {
+    id: 5, theme: 'mc-plum', heroColor: '#6c3483',
+    icon: '🎨', category: 'Arts & Culture',
+    nameHidden: 'A Creative Afternoon',
+    unit: 'Level 5, #05-33',
+    hints: [
+      { emoji: '⏱️', label: 'Duration', value: '2 hours', highlight: true },
+      { emoji: '📅', label: 'When', value: 'Today, 3:00pm' },
+      { emoji: '💪', label: 'Effort', value: 'Light — seated' },
+      { emoji: '👶', label: 'Child friendly', yn: true },
+      { emoji: '🐾', label: 'Animals', yn: false },
+      { emoji: '👴', label: 'Elderly welcome', yn: true },
+      { emoji: '🧑‍🤝‍🧑', label: 'Spots left', value: '10 of 15' },
+    ],
+    participants: 261,
+    testimonial: { quote: 'I came in with zero artistic skill and left with a smile on my face. Truly uplifting experience.', name: 'Daniel F.' },
+    confettiColors: ['#6c3483','#a57bc7','#e8d5f5','#fff','#f3e5ff'],
+    isNew: false
+  },
+  {
+    id: 6, theme: 'mc-teal', heroColor: '#0e6655',
+    icon: '🤝', category: 'Community Care',
+    nameHidden: 'A Caring Visit',
+    unit: 'Level 1, #01-18',
+    hints: [
+      { emoji: '⏱️', label: 'Duration', value: '2.5 hours', highlight: true },
+      { emoji: '📅', label: 'When', value: 'Today, 1:00pm' },
+      { emoji: '💪', label: 'Effort', value: 'Light — conversational' },
+      { emoji: '👶', label: 'Child friendly', yn: false },
+      { emoji: '🐾', label: 'Animals', yn: false },
+      { emoji: '👴', label: 'Elderly welcome', yn: true },
+      { emoji: '🧑‍🤝‍🧑', label: 'Spots left', value: '2 of 6' },
+    ],
+    participants: 183,
+    testimonial: { quote: 'A quiet but deeply moving session. The stories I heard stayed with me for weeks after.', name: 'Sarah L.' },
+    confettiColors: ['#0e6655','#1abc9c','#a2e0d4','#fff','#d1f2eb'],
+    isNew: true
+  },
+];
+
+let activeEvent = null;
+
+// ─── SCREEN NAV ───
+function showBoxes() {
+  document.getElementById('s-landing').style.display = 'none';
+  const sb = document.getElementById('s-boxes');
+  sb.style.display = 'flex';
+  sb.style.flexDirection = 'column';
+  renderBoxes(events);
+  // size pins container to match SVG after paint
+  requestAnimationFrame(() => {
+    const svgEl = document.querySelector('.mall-svg');
+    const scene = document.getElementById('mall-scene');
+    const container = document.getElementById('pins-container');
+    if (svgEl && scene) {
+      const rect = svgEl.getBoundingClientRect();
+      const sceneRect = scene.getBoundingClientRect();
+      container.style.top    = (rect.top - sceneRect.top) + 'px';
+      container.style.left   = (rect.left - sceneRect.left) + 'px';
+      container.style.width  = rect.width + 'px';
+      container.style.height = rect.height + 'px';
+    }
+  });
+}
+
+function showLanding() {
+  document.getElementById('s-boxes').style.display = 'none';
+  document.getElementById('s-landing').style.display = 'flex';
+}
+
+// ─── PIN POSITIONS on the SVG (as % of SVG dimensions 358w x 460h) ───
+// Each event gets a fixed spot on a specific floor, left or right wing
+const pinPositions = [
+  { left: '26%',  top: '18%'  },  // L4 left
+  { left: '74%',  top: '35%'  },  // L3 right
+  { left: '22%',  top: '52%'  },  // L2 left
+  { left: '80%',  top: '52%'  },  // L2 right
+  { left: '68%',  top: '68%'  },  // L1 right
+  { left: '28%',  top: '85%'  },  // B1 left
+];
+
+const pinThemes = ['pin-green','pin-red','pin-blue','pin-gold','pin-plum','pin-teal'];
+
+// ─── RENDER PINS ───
+function renderBoxes(data) {
+  const container = document.getElementById('pins-container');
+  const svgEl     = document.getElementById('mall-svg');
+  container.innerHTML = '';
+  container.style.pointerEvents = 'none';
+
+  data.forEach((ev, i) => {
+    const pos   = pinPositions[i % pinPositions.length];
+    const theme = pinThemes[i % pinThemes.length];
+
+    const pin = document.createElement('div');
+    pin.className = `floor-pin ${theme}`;
+    pin.style.left = pos.left;
+    pin.style.top  = pos.top;
+    pin.style.position = 'absolute';
+    pin.style.pointerEvents = 'all';
+
+    pin.innerHTML = `
+      <div class="pin-bubble" style="position:relative;">
+        ${ev.isNew ? '<div class="pin-new"></div>' : ''}
+        <span class="pin-icon">${ev.icon}</span>
+      </div>
+      <div class="pin-tail"></div>
+    `;
+
+    pin.addEventListener('click', () => openModal(ev));
+    container.appendChild(pin);
+  });
+}
+
+function shuffleBoxes() {
+  const container = document.getElementById('pins-container');
+  container.style.opacity = '0';
+  container.style.transition = 'opacity 0.2s';
+  setTimeout(() => {
+    const shuffled = [...events].sort(() => Math.random() - 0.5);
+    renderBoxes(shuffled);
+    container.style.opacity = '1';
+  }, 220);
+}
+
+// ─── MODAL ───
+function openModal(ev) {
+  activeEvent = ev;
+
+  // Hero band colour
+  document.getElementById('modal-hero').style.background = ev.heroColor;
+
+  // Icon, category, name
+  document.getElementById('m-icon').textContent = ev.icon;
+  document.getElementById('m-category').textContent = ev.category;
+  document.getElementById('m-name').textContent = ev.nameHidden;
+
+  // Hints
+  const grid = document.getElementById('hints-grid');
+  grid.innerHTML = '';
+  ev.hints.forEach(h => {
+    const chip = document.createElement('div');
+    chip.className = `hint-chip${h.highlight ? ' highlight' : ''}`;
+    let valueHtml = h.yn !== undefined
+      ? `<span class="yn-badge ${h.yn ? 'yn-yes' : 'yn-no'}">${h.yn ? '✓ Yes' : '✕ No'}</span>`
+      : `<div class="hint-value">${h.value}</div>`;
+    chip.innerHTML = `
+      <div class="hint-emoji">${h.emoji}</div>
+      <div class="hint-info">
+        <div class="hint-label">${h.label}</div>
+        ${valueHtml}
+      </div>`;
+    grid.appendChild(chip);
+  });
+
+  // Social proof block — inline row layout
+  const proof = document.getElementById('social-proof');
+  proof.innerHTML = `
+    <div class="proof-stat">
+      <span class="proof-num">${ev.participants.toLocaleString()}</span>
+      <span class="proof-lbl">past<br>volunteers</span>
+    </div>
+    <div class="proof-testimonial">
+      <div class="proof-quote">"${ev.testimonial.quote}"</div>
+      <div class="proof-name">— ${ev.testimonial.name}</div>
+    </div>
+  `;
+
+  // Show overlay + modal
+  const overlay = document.getElementById('modal-overlay');
+  const modal   = document.getElementById('modal');
+  overlay.classList.add('open');
+  overlay.style.animation = 'fadeIn 0.25s ease both';
+  requestAnimationFrame(() => modal.classList.add('open'));
+
+  launchConfetti(ev.confettiColors);
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function closeModal() {
+  const modal   = document.getElementById('modal');
+  const overlay = document.getElementById('modal-overlay');
+  modal.classList.remove('open');
+  modal.style.transform = 'translateY(100%)';
+  setTimeout(() => {
+    overlay.classList.remove('open');
+    modal.style.transform = '';
+  }, 420);
+}
+
+function signUp() {
+  const ev = activeEvent;
+  closeModal();
+  setTimeout(() => {
+    // Populate confirm card with unit reveal
+    document.getElementById('confirm-unit').textContent = ev.unit;
+    document.getElementById('confirm-time').textContent = ev.hints.find(h => h.label === 'When').value.replace('Today, ', '');
+    document.getElementById('confirm-cat').textContent = ev.category;
+    document.getElementById('confirm-overlay').classList.add('open');
+    launchConfetti(['#e85d26','#c0392b','#ffd166','#fff','#2d6a4f','#a57bc7']);
+  }, 380);
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+}
+
+function themeColor(theme, type) {
+  const map = {
+    'mc-green':  { accent: '#2d6a4f', pale: '#eef6f1' },
+    'mc-orange': { accent: '#e85d26', pale: '#fdeee6' },
+    'mc-blue':   { accent: '#1a5276', pale: '#e8f2fb' },
+    'mc-gold':   { accent: '#c17f24', pale: '#fdf3e3' },
+    'mc-plum':   { accent: '#663399', pale: '#f1ecf8' },
+    'mc-teal':   { accent: '#16697a', pale: '#e6f4f4' },
+  };
+  return map[theme]?.[type] || '#e85d26';
+}
+
+// ═══════════════════════════════
+//  CONFETTI ENGINE
+// ═══════════════════════════════
+const canvas  = document.getElementById('confetti-canvas');
+const ctx     = canvas.getContext('2d');
+let particles = [];
+let rafId     = null;
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function Particle(colors) {
+  this.reset = function(colors) {
+    this.x     = Math.random() * canvas.width;
+    this.y     = -10 - Math.random() * 40;
+    this.w     = 6 + Math.random() * 9;
+    this.h     = 4 + Math.random() * 6;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.vx    = (Math.random() - 0.5) * 4;
+    this.vy    = 3 + Math.random() * 5;
+    this.angle = Math.random() * Math.PI * 2;
+    this.spin  = (Math.random() - 0.5) * 0.25;
+    this.alpha = 1;
+    this.decay = 0.008 + Math.random() * 0.006;
+    this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+    this.life  = 1;
+  };
+  this.reset(colors);
+
+  this.update = function() {
+    this.vy    += 0.12;               // gravity
+    this.vx    *= 0.99;               // air drag
+    this.x     += this.vx;
+    this.y     += this.vy;
+    this.angle += this.spin;
+    this.life  -= this.decay;
+    this.alpha  = Math.max(0, this.life);
+  };
+
+  this.draw = function() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+    ctx.fillStyle = this.color;
+    if (this.shape === 'rect') {
+      ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, this.w / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  };
+}
+
+function launchConfetti(colors) {
+  const count = 90;
+  for (let i = 0; i < count; i++) {
+    const p = new Particle(colors);
+    // stagger launch times via delayed y start
+    p.y = -10 - Math.random() * 120;
+    particles.push(p);
+  }
+  if (!rafId) animateConfetti();
+}
+
+function animateConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles = particles.filter(p => p.life > 0 && p.y < canvas.height + 40);
+  particles.forEach(p => { p.update(); p.draw(); });
+  if (particles.length > 0) {
+    rafId = requestAnimationFrame(animateConfetti);
+  } else {
+    rafId = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+</script>
+</body>
+</html>
